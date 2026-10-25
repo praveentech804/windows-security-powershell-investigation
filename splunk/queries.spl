@@ -1,64 +1,72 @@
 /*
-Windows Security & PowerShell investigation SPL
-Replace index=windows_investigation with your actual index.
-Check field extraction and timestamp parsing before relying on results.
+Windows Security Log Investigation
+Tool: Splunk Enterprise
+Index used in this lab: main
+Dataset timestamps: 2024-03-04
+Select an appropriate time range, such as All time.
+Verify field names before relying on any query.
 */
 
-# 1. Overview of event IDs
-index=windows_investigation
+# 1. Event ID overview
+index=main
 | stats count by event_id
 | sort - count
 
-# 2. Failed logons by source, account, and host
-index=windows_investigation event_id=4625
-| stats count min(_time) as first_seen max(_time) as last_seen by source_ip user host
-| convert ctime(first_seen) ctime(last_seen)
-| sort - count
+# 2. Failed logon events
+index=main event_id=4625
+| table _time extracted_host event_id outcome details
+| sort 0 _time
 
-# 3. Burst of failed logons: 3 or more in a 10-minute span
-index=windows_investigation event_id=4625
-| bin _time span=10m
-| stats count by _time source_ip user host
-| where count >= 3
-| sort - count
+# 3. Successful logon events
+index=main event_id=4624
+| table _time extracted_host event_id outcome details
+| sort 0 _time
 
-# 4. Successful logons
-index=windows_investigation event_id=4624
-| table _time host user source_ip outcome details
-| sort - _time
+# 4. Compare failed and successful logon counts by host
+index=main (event_id=4624 OR event_id=4625)
+| stats count by extracted_host event_id
+| sort extracted_host event_id
 
-# 5. PowerShell encoded/hidden/download patterns
-index=windows_investigation
-| eval cmd_lower=lower(command_line)
-| where like(cmd_lower,"% -encodedcommand%")
-    OR like(cmd_lower,"% -enc %")
-    OR like(cmd_lower,"% -windowstyle hidden%")
-    OR like(cmd_lower,"%downloadstring%")
-    OR like(cmd_lower,"%downloadfile%")
-    OR like(cmd_lower,"%executionpolicy bypass%")
-| table _time host user source_ip process_name command_line details
-| sort - _time
+# 5. Review process creation events
+index=main event_id=4688
+| table _time extracted_host process_name command_line
+| sort 0 _time
 
-# 6. Process creation of administrative utilities (review context; not inherently malicious)
-index=windows_investigation event_id=4688
+# 6. Search PowerShell-related events
+index=main
+| where lower(process_name)="powershell.exe"
+    OR lower(log_channel)="powershell"
+    OR like(lower(command_line), "%powershell%")
+| table _time extracted_host event_id log_channel process_name command_line details
+| sort 0 _time
+
+# 7. Review potentially suspicious command-line patterns
+index=main
+| eval cmd_lower=lower(coalesce(command_line, ""))
+| where like(cmd_lower, "%-encodedcommand%")
+    OR like(cmd_lower, "%-enc %")
+    OR like(cmd_lower, "%-windowstyle hidden%")
+    OR like(cmd_lower, "%downloadstring%")
+    OR like(cmd_lower, "%downloadfile%")
+    OR like(cmd_lower, "%executionpolicy bypass%")
+| table _time extracted_host event_id process_name command_line details
+| sort 0 _time
+
+# 8. Review administrative utility execution
+index=main event_id=4688
 | where lower(process_name)="net.exe"
-    OR lower(process_name)="net1.exe"
     OR lower(process_name)="reg.exe"
-| table _time host user process_name command_line
-| sort - _time
+    OR lower(process_name)="net1.exe"
+| table _time extracted_host process_name command_line
+| sort 0 _time
 
-# 7. Activity by host and user
-index=windows_investigation
-| stats count values(event_id) as event_ids values(process_name) as processes by host user
-| sort - count
+# 9. Build a host event timeline
+index=main
+| table _time extracted_host event_id log_channel process_name command_line outcome details
+| sort 0 _time
 
-# 8. Timeline for a host (replace SRV-DC01 as needed)
-index=windows_investigation host="SRV-DC01"
-| table _time event_id log_channel user source_ip process_name command_line outcome details
-| sort _time
-
-# 9. Events with missing event IDs (useful for PowerShell script-block rows in this CSV)
-index=windows_investigation
+# 10. Review events with missing event IDs
+index=main
 | where isnull(event_id) OR event_id=""
-| table _time host user log_channel process_name command_line details
-| sort _time
+| table _time extracted_host log_channel process_name command_line details
+| sort 0 _time

@@ -1,1 +1,0 @@
-# The analyzer uses only Python standard-library modules.

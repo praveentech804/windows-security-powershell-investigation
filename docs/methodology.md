@@ -1,26 +1,30 @@
-# Methodology and Field Notes
+# Investigation Methodology
 
-## Event identifiers represented in the sample
-- `4624`: successful logon
-- `4625`: failed logon
-- `4634`: logoff
-- `4688`: process creation
+## Scope
+This project uses Splunk Enterprise and SPL to investigate a Windows
+Security and PowerShell-related training dataset.
 
-These event IDs are interpreted in the context of the supplied CSV's normalized fields. Production Windows event XML may include additional useful fields (logon type, process ID, parent process, status/substatus, token elevation, and more).
+## Steps
+1. Confirm the selected index and time range.
+2. Review event ID counts to understand the dataset.
+3. Inspect failed logons (4625) and successful logons (4624).
+4. Review process creation events (4688).
+5. Search command-line fields for potentially suspicious patterns.
+6. Build a chronological timeline from the available events.
+7. Document evidence, limitations, and recommended follow-up actions.
 
-## Detection logic
-- Repeated failures: at least 3 failures from the same source IP/account/host within 10 minutes.
-- Failures followed by success: at least 3 failures from the same source IP/account/host in the 10 minutes preceding a successful logon.
-- PowerShell command patterns: encoded command, hidden window, remote download methods, execution-policy bypass, and expression evaluation.
-- Administrative utilities: `net.exe`, `net1.exe`, and `reg.exe` are surfaced at low severity for context review.
+## Interpretation
+- Repeated failed logons may be caused by mistakes, misconfiguration,
+  or malicious activity; investigate the surrounding context.
+- Encoded commands, hidden windows, and download-related commands
+  require review but are not proof of malicious execution by themselves.
+- Administrative utilities can be used for legitimate administration.
+- Validate timestamps, field extraction, host identity, and event context.
 
-## Severity is triage priority, not confidence
-Severity communicates a starting priority. It does not mean an event is confirmed malicious. Tune thresholds against a known-good baseline and organizational policies.
+## Limitations
+The available training dataset may not contain source IP, username,
+parent process, or complete script-block information as searchable
+fields. Do not infer missing evidence. Confirm field availability in
+Splunk before using it for attribution.
 
-## Evidence gaps to close
-- Original Windows Event XML and event record IDs
-- Logon type and authentication package
-- Process ID, parent process, signer/hash, and process tree
-- PowerShell Operational 4103/4104 records where enabled
-- DNS, proxy, firewall, and endpoint network telemetry
-- Asset criticality, account owner, approved admin activity, and change records
+This methodology describes a manual Splunk investigation workflow.
